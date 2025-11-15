@@ -1,0 +1,65 @@
+{
+  "development": {
+    "kafka": {
+      "clientId": "vehicle-service-dev",
+      "brokers": ["localhost:9092"],
+      "groupId": "vehicle-service-group-dev",
+      "topics": {
+        "vehicleEvents": "vehicle-events"
+      },
+      "consumer": {
+        "sessionTimeout": 30000,
+        "heartbeatInterval": 3000,
+        "allowAutoTopicCreation": false
+      },
+      "retry": {
+        "retries": 5,
+        "initialRetryTime": 300,
+        "maxRetryTime": 30000,
+        "reconnectTimeout": 5000
+      }
+    }
+  },
+  "production": {
+    "kafka": {
+      "clientId": "vehicle-service-prod",
+      "brokers": ["kafka-1:9092", "kafka-2:9092", "kafka-3:9092"],
+      "groupId": "vehicle-service-group-prod",
+      "topics": {
+        "vehicleEvents": "vehicle-events"
+      },
+      "consumer": {
+        "sessionTimeout": 30000,
+        "heartbeatInterval": 3000,
+        "allowAutoTopicCreation": false
+      },
+      "retry": {
+        "retries": 10,
+        "initialRetryTime": 500,
+        "maxRetryTime": 60000,
+        "reconnectTimeout": 10000
+      }
+    }
+  },
+  "test": {
+    "kafka": {
+      "clientId": "vehicle-service-test",
+      "brokers": ["localhost:9092"],
+      "groupId": "vehicle-service-group-test",
+      "topics": {
+        "vehicleEvents": "vehicle-events-test"
+      },
+      "consumer": {
+        "sessionTimeout": 30000,
+        "heartbeatInterval": 3000,
+        "allowAutoTopicCreation": true
+      },
+      "retry": {
+        "retries": 3,
+        "initialRetryTime": 100,
+        "maxRetryTime": 5000,
+        "reconnectTimeout": 2000
+      }
+    }
+  }
+}

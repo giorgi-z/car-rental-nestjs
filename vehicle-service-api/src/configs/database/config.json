@@ -1,0 +1,33 @@
+{
+  "development": {
+    "mongodb": {
+      "uri": "mongodb://localhost:27017/car_rental",
+      "options": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true
+      }
+    }
+  },
+  "production": {
+    "mongodb": {
+      "uri": "mongodb://mongodb-service:27017/car_rental",
+      "options": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true,
+        "maxPoolSize": 50,
+        "minPoolSize": 10,
+        "serverSelectionTimeoutMS": 5000,
+        "socketTimeoutMS": 45000
+      }
+    }
+  },
+  "test": {
+    "mongodb": {
+      "uri": "mongodb://localhost:27017/car_rental_test",
+      "options": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true
+      }
+    }
+  }
+}
