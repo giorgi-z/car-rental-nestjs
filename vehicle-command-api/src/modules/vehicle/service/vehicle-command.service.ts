@@ -3,11 +3,12 @@ import { CreateVehicleDto } from '../dtos/createVehicle.dto';
 import { VehicleResponseDto } from '../dtos/createVehicleResponse.dto';
 import { KafkaProducerService } from '../../kafka-producer/service/kafka-producer.service';
 import { KAFKA_ACTIONS } from '../../base/constants/kafka-actions.constant';
-import { Utils } from 'src/modules/base/utils/utils.class';
+import { Utils } from '../../base/utils/utils.class';
+import { KafkaModuleConfig } from '../../base/interfaces/kafka-config.interface';
 
 @Injectable()
 export class VehicleCommandService {
-  private readonly kafkaConfig:any;
+  private readonly kafkaConfig: KafkaModuleConfig;
 
   constructor(private readonly kafkaProducerService: KafkaProducerService) {
     this.kafkaConfig = Utils.readModuleConfig('kafka-producer');
@@ -25,6 +26,7 @@ export class VehicleCommandService {
 
     const response = this.toResponseDto(data);
 
+    // Publish vehicle created event to Kafka
     try {
       await this.kafkaProducerService.produce({
         topic: this.kafkaConfig.kafka.topics.vehicleEvents,
@@ -41,8 +43,8 @@ export class VehicleCommandService {
               timestamp: new Date().toISOString(),
             }),
             headers: {
-              'action': KAFKA_ACTIONS.VEHICLE_CREATED,
-              'date': Date.now().toString()
+              action: KAFKA_ACTIONS.VEHICLE_CREATED,
+              date: Date.now().toString(),
             },
           },
         ],

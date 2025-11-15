@@ -6,18 +6,17 @@ import {
 } from '@nestjs/common';
 import { Kafka, Producer, ProducerRecord } from 'kafkajs';
 import { Utils } from '../../base/utils/utils.class';
+import { KafkaModuleConfig } from '../../base/interfaces/kafka-config.interface';
 
 @Injectable()
-export class KafkaProducerService
-  implements OnModuleInit, OnApplicationShutdown
+export class KafkaProducerService implements OnModuleInit, OnApplicationShutdown
 {
-  private readonly logger = new Logger(KafkaProducerService.name);
   private readonly kafka: Kafka;
   private readonly producer: Producer;
   private isConnected = false;
 
   constructor() {
-    const kafkaConfig = Utils.readModuleConfig('kafka-producer');
+    const kafkaConfig: KafkaModuleConfig = Utils.readModuleConfig('kafka-producer');
 
     this.kafka = new Kafka({
       clientId: kafkaConfig.kafka.clientId,
@@ -37,9 +36,7 @@ export class KafkaProducerService
     try {
       await this.producer.connect();
       this.isConnected = true;
-      this.logger.log('✓ Kafka producer connected successfully');
     } catch (error) {
-      this.logger.error('✗ Failed to connect Kafka producer', error);
       throw error;
     }
   }
@@ -51,13 +48,8 @@ export class KafkaProducerService
 
     try {
       await this.producer.send(record);
-      this.logger.log(`✓ Message sent to topic: ${record.topic}`);
     } catch (error) {
-      this.logger.error(
-        `✗ Failed to send message to topic: ${record.topic}`,
-        error,
-      );
-      throw error;
+        throw error;
     }
   }
 
@@ -66,10 +58,8 @@ export class KafkaProducerService
       if (this.isConnected) {
         await this.producer.disconnect();
         this.isConnected = false;
-        this.logger.log('✓ Kafka producer disconnected successfully');
       }
     } catch (error) {
-      this.logger.error('✗ Failed to disconnect Kafka producer', error);
       throw error;
     }
   }
