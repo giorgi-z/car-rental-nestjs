@@ -1,29 +1,29 @@
 {
   "development": {
     "api": {
-      "port": 8000,
+      "port": 7000,
       "apiPrefix": "api",
       "apiVersion": "1.0",
-      "apiTitle": "Vehicle Service API",
-      "apiDescription": "The vehicle service API description for managing vehicle rentals"
+      "apiTitle": "Vehicle Command API",
+      "apiDescription": "The vehicle command API description for managing vehicle rentals"
     }
   },
   "production": {
     "api": {
-      "port": 8000,
+      "port": 7000,
       "apiPrefix": "api",
       "apiVersion": "1.0",
-      "apiTitle": "Vehicle Service API",
-      "apiDescription": "The vehicle service API description for managing vehicle rentals"
+      "apiTitle": "Vehicle Command API",
+      "apiDescription": "The vehicle command API description for managing vehicle rentals"
     }
   },
   "test": {
     "api": {
-      "port": 8001,
+      "port": 7001,
       "apiPrefix": "api",
       "apiVersion": "1.0",
-      "apiTitle": "Vehicle Service API - Test",
-      "apiDescription": "The vehicle service API description for testing"
+      "apiTitle": "Vehicle Command API - Test",
+      "apiDescription": "The vehicle command API description for testing"
     }
   }
 }
