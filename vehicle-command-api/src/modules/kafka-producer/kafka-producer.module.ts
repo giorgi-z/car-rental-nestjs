@@ -3,6 +3,6 @@ import { KafkaProducerService } from './service/kafka-producer.service';
 
 @Module({
   providers: [KafkaProducerService],
-  exports: [KafkaProducerService]
+  exports: [KafkaProducerService],
 })
-export class KafkaProducerModuleModule {}
+export class KafkaProducerModule {}

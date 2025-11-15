@@ -1,0 +1,47 @@
+{
+  "development": {
+    "kafka": {
+      "clientId": "vehicle-command-api",
+      "brokers": ["localhost:9092"],
+      "connectionTimeout": 3000,
+      "requestTimeout": 30000,
+      "topics": {
+        "vehicleEvents": "vehicle-events"
+      },
+      "retry": {
+        "initialRetryTime": 100,
+        "retries": 8
+      }
+    }
+  },
+  "production": {
+    "kafka": {
+      "clientId": "vehicle-command-api",
+      "brokers": ["kafka-broker-1:9092", "kafka-broker-2:9092"],
+      "connectionTimeout": 3000,
+      "requestTimeout": 30000,
+      "topics": {
+        "vehicleEvents": "vehicle-events"
+      },
+      "retry": {
+        "initialRetryTime": 100,
+        "retries": 8
+      }
+    }
+  },
+  "test": {
+    "kafka": {
+      "clientId": "vehicle-command-api-test",
+      "brokers": ["localhost:9093"],
+      "connectionTimeout": 1000,
+      "requestTimeout": 10000,
+      "topics": {
+        "vehicleEvents": "vehicle-events-test"
+      },
+      "retry": {
+        "initialRetryTime": 50,
+        "retries": 3
+      }
+    }
+  }
+}

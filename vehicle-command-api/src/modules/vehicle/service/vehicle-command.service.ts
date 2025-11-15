@@ -1,31 +1,66 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { CreateVehicleDto } from '../dtos/createVehicle.dto';
 import { VehicleResponseDto } from '../dtos/createVehicleResponse.dto';
+import { KafkaProducerService } from '../../kafka-producer/service/kafka-producer.service';
+import { KAFKA_ACTIONS } from '../../base/constants/kafka-actions.constant';
+import { Utils } from 'src/modules/base/utils/utils.class';
 
 @Injectable()
 export class VehicleCommandService {
+  private readonly kafkaConfig:any;
 
-    async createVehicle(data: CreateVehicleDto): Promise<CreateVehicleDto> {
-        const plateNo: string = data.plateNo;
+  constructor(private readonly kafkaProducerService: KafkaProducerService) {
+    this.kafkaConfig = Utils.readModuleConfig('kafka-producer');
+  }
 
-        if (!plateNo || !plateNo.trim()) {
-            throw new BadRequestException('Plate number is required');
-        }
+  async createVehicle(data: CreateVehicleDto): Promise<VehicleResponseDto> {
+    const plateNo: string = data.plateNo;
 
-        const normalizedPlateNo = plateNo.trim().toUpperCase();
-        data.plateNo = normalizedPlateNo;
-
-        return this.toResponseDto(data);
+    if (!plateNo || !plateNo.trim()) {
+      throw new BadRequestException('Plate number is required');
     }
 
-    private toResponseDto(data: CreateVehicleDto): VehicleResponseDto {
-        return {
-            plateNo: data.plateNo,
-            vehicleYear: data.vehicleYear,
-            price: data.price,
-            contact: data.contact,
-            make: data.make,
-            model: data.model,
-        };
+    const normalizedPlateNo = plateNo.trim().toUpperCase();
+    data.plateNo = normalizedPlateNo;
+
+    const response = this.toResponseDto(data);
+
+    try {
+      await this.kafkaProducerService.produce({
+        topic: this.kafkaConfig.kafka.topics.vehicleEvents,
+        messages: [
+          {
+            key: response.plateNo,
+            value: JSON.stringify({
+              plateNo: response.plateNo,
+              make: response.make,
+              model: response.model,
+              vehicleYear: response.vehicleYear,
+              price: response.price,
+              contact: response.contact,
+              timestamp: new Date().toISOString(),
+            }),
+            headers: {
+              'action': KAFKA_ACTIONS.VEHICLE_CREATED,
+              'date': Date.now().toString()
+            },
+          },
+        ],
+      });
+    } catch (error) {
     }
+
+    return response;
+  }
+
+  private toResponseDto(data: CreateVehicleDto): VehicleResponseDto {
+    return {
+      plateNo: data.plateNo,
+      vehicleYear: data.vehicleYear,
+      price: data.price,
+      contact: data.contact,
+      make: data.make,
+      model: data.model,
+    };
+  }
 }

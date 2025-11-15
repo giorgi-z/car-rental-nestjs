@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { KafkaProducerModuleModule } from './modules/kafka-producer/kafka-producer.module';
-import { VehicleCommandModuleModule } from './modules/vehicle/vehicle-command-module.module';
+import { KafkaProducerModule } from './modules/kafka-producer/kafka-producer.module';
+import { VehicleCommandModule } from './modules/vehicle/vehicle-command-module.module';
 
 @Module({
-  imports: [
-    KafkaProducerModuleModule, 
-    VehicleCommandModuleModule]
+  imports: [KafkaProducerModule, VehicleCommandModule],
 })
-
 export class AppModule {
   public static rootDir: string = __dirname;
   public static configsDir = `${__dirname}/configs`;
