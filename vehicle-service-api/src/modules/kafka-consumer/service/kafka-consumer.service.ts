@@ -82,32 +82,29 @@ export class KafkaConsumerService implements OnModuleInit {
       // Parse the message
       const vehicleData = JSON.parse(value);
 
-      // Validate the message has required fields
-      if (
-        !vehicleData.plateNo ||
-        !vehicleData.vehicleYear ||
-        !vehicleData.price ||
-        !vehicleData.contact
-      ) {
-        return;
+      if(
+         vehicleData &&
+         vehicleData.plateNo &&
+         vehicleData.vehicleYear &&
+         vehicleData.price != null &&
+         vehicleData.contact
+      ){
+        // Create DTO instance
+        const createVehicleDto: CreateVehicleDto = {
+          plateNo: vehicleData.plateNo,
+          make: vehicleData.make,
+          model: vehicleData.model,
+          vehicleYear: vehicleData.vehicleYear,
+          price: vehicleData.price,
+          contact: {
+            phone: vehicleData.contact.phone,
+            email: vehicleData.contact.email,
+          },
+        };
+
+        // Create vehicle using VehicleService
+        const createdVehicle = await this.vehicleService.createVehicle(createVehicleDto);
       }
-
-      // Create DTO instance
-      const createVehicleDto: CreateVehicleDto = {
-        plateNo: vehicleData.plateNo,
-        make: vehicleData.make,
-        model: vehicleData.model,
-        vehicleYear: vehicleData.vehicleYear,
-        price: vehicleData.price,
-        contact: {
-          phone: vehicleData.contact.phone,
-          email: vehicleData.contact.email,
-        },
-      };
-
-      // Create vehicle using VehicleService
-      const createdVehicle =
-        await this.vehicleService.createVehicle(createVehicleDto);
     } catch (error) {
       // Optionally, you can implement dead letter queue or retry logic here
     }

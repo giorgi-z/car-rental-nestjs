@@ -19,13 +19,12 @@ export class VehicleService {
   ) {}
 
   async createVehicle(data: CreateVehicleDto): Promise<VehicleResponseDto> {
-    const plateNo: string = data.plateNo;
+    const normalizedPlateNo = data.plateNo?.trim().toUpperCase();
 
-    if (!plateNo || !plateNo.trim()) {
+    if (!normalizedPlateNo) {
       throw new BadRequestException('Plate number is required');
     }
 
-    const normalizedPlateNo = plateNo.trim().toUpperCase();
     const vehicle = await this.vehicleModel.findOne({ normalizedPlateNo }).exec();
 
     if (vehicle) {
@@ -34,6 +33,7 @@ export class VehicleService {
 
     data.plateNo = normalizedPlateNo;
     const res = await this.vehicleModel.create(data);
+
     return this.toResponseDto(res);
   }
 
