@@ -8,4 +8,7 @@ import { VehicleCommandModuleModule } from './modules/vehicle/vehicle-command-mo
     VehicleCommandModuleModule]
 })
 
-export class AppModule {}
+export class AppModule {
+  public static rootDir: string = __dirname;
+  public static configsDir = `${__dirname}/configs`;
+}
