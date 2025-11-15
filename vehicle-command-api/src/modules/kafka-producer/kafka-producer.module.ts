@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { KafkaProducerService } from './kafka-producer.service';
+import { KafkaProducerService } from './service/kafka-producer.service';
 
 @Module({
   providers: [KafkaProducerService],

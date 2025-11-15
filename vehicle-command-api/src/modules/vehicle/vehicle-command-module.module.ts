@@ -3,11 +3,7 @@ import { VehicleCommandController } from './controller/vehicle-command.controlle
 import { VehicleCommandService } from './service/vehicle-command.service';
 
 @Module({
-
-
   controllers: [VehicleCommandController],
-
-
   providers: [VehicleCommandService]
 })
 

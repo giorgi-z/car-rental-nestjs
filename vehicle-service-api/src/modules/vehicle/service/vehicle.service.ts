@@ -20,12 +20,19 @@ export class VehicleService {
 
   async createVehicle(data: CreateVehicleDto): Promise<VehicleResponseDto> {
     const plateNo: string = data.plateNo;
-    const vehicle = await this.vehicleModel.findOne({ plateNo }).exec();
+
+    if (!plateNo || !plateNo.trim()) {
+      throw new BadRequestException('Plate number is required');
+    }
+
+    const normalizedPlateNo = plateNo.trim().toUpperCase();
+    const vehicle = await this.vehicleModel.findOne({ normalizedPlateNo }).exec();
 
     if (vehicle) {
       throw new ConflictException('Vehicle already exists!');
     }
 
+    data.plateNo = normalizedPlateNo;
     const res = await this.vehicleModel.create(data);
     return this.toResponseDto(res);
   }

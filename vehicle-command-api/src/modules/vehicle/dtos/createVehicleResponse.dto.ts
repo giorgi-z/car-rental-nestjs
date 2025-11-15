@@ -9,11 +9,14 @@ export class ContactDto {
 }
 
 export class VehicleResponseDto {
-  @ApiProperty({ example: '678c8a4a4f2a4d0012e9c123' })
-  id: string;
-
   @ApiProperty({ example: 'TE001ST' })
   plateNo: string;
+
+  @ApiProperty({ example: 'BYD' })
+  make: string;
+
+  @ApiProperty({ example: 'Qin Plus' })
+  model: string;
 
   @ApiProperty({ example: 2015 })
   vehicleYear: number;
