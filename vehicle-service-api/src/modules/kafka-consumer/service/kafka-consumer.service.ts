@@ -3,6 +3,7 @@ import { Kafka, Consumer, EachMessagePayload } from 'kafkajs';
 import { VehicleService } from '../../vehicle/service/vehicle.service';
 import { CreateVehicleDto } from '../../vehicle/dtos/createVehicle.dto';
 import { Utils } from '../../base/utils/utils.class';
+import { KAFKA_ACTIONS } from 'src/modules/base/constants/kafka-actions.constant';
 
 @Injectable()
 export class KafkaConsumerService implements OnModuleInit {
@@ -79,34 +80,48 @@ export class KafkaConsumerService implements OnModuleInit {
         return;
       }
 
-      // Parse the message
-      const vehicleData = JSON.parse(value);
+      const rawHeaders = message.headers;
 
-      if(
-         vehicleData &&
-         vehicleData.plateNo &&
-         vehicleData.vehicleYear &&
-         vehicleData.price != null &&
-         vehicleData.contact
-      ){
-        // Create DTO instance
-        const createVehicleDto: CreateVehicleDto = {
-          plateNo: vehicleData.plateNo,
-          make: vehicleData.make,
-          model: vehicleData.model,
-          vehicleYear: vehicleData.vehicleYear,
-          price: vehicleData.price,
-          contact: {
-            phone: vehicleData.contact.phone,
-            email: vehicleData.contact.email,
-          },
-        };
+      const headers = rawHeaders &&Object.fromEntries(
+        Object.entries(rawHeaders).map(([key, val]) => [
+          key,
+          val instanceof Buffer ? val.toString() : (val as string | undefined),
+        ]),
+      );
 
-        // Create vehicle using VehicleService
-        const createdVehicle = await this.vehicleService.createVehicle(createVehicleDto);
+      const actionType = headers?.['action'];
+      console.log(actionType);
+
+      if(actionType === KAFKA_ACTIONS.VEHICLE_CREATED){
+        // Parse the message
+        const vehicleData = JSON.parse(value);
+
+        if(
+          vehicleData &&
+          vehicleData.plateNo &&
+          vehicleData.vehicleYear &&
+          vehicleData.price != null &&
+          vehicleData.contact
+        ){
+          // Create DTO instance
+          const createVehicleDto: CreateVehicleDto = {
+            plateNo: vehicleData.plateNo,
+            make: vehicleData.make,
+            model: vehicleData.model,
+            vehicleYear: vehicleData.vehicleYear,
+            price: vehicleData.price,
+            contact: {
+              phone: vehicleData.contact.phone,
+              email: vehicleData.contact.email,
+            },
+          };
+
+          // Create vehicle using VehicleService
+          const createdVehicle = await this.vehicleService.createVehicle(createVehicleDto);
+        }
       }
     } catch (error) {
-      // Optionally, you can implement dead letter queue or retry logic here
+      // Add dead letter queue or retry logic here
     }
   }
 
