@@ -9,7 +9,4 @@ import { DatabaseModule } from './modules/database/database.module';
     VehicleModule, 
     KafkaConsumerModule],
 })
-export class AppModule {
-  public static rootDir: string = __dirname;
-  public static configsDir = `${__dirname}/configs`;
-}
+export class AppModule {}

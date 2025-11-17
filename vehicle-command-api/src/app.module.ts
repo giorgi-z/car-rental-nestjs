@@ -5,7 +5,4 @@ import { VehicleCommandModule } from './modules/vehicle/vehicle-command-module.m
 @Module({
   imports: [KafkaProducerModule, VehicleCommandModule],
 })
-export class AppModule {
-  public static rootDir: string = __dirname;
-  public static configsDir = `${__dirname}/configs`;
-}
+export class AppModule {}

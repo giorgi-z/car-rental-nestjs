@@ -90,7 +90,6 @@ export class KafkaConsumerService implements OnModuleInit {
       );
 
       const actionType = headers?.['action'];
-      console.log(actionType);
 
       if(actionType === KAFKA_ACTIONS.VEHICLE_CREATED){
         // Parse the message
